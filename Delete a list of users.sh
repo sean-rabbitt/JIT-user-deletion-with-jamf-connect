@@ -48,7 +48,7 @@
 # — SRABBITT 21DEC2021
 
 # Location of user deadpool list
-DELETE_USER_TOUCH_FILE="/Library/Application\ Support/JAMF/Receipts/.userCleanup"
+DELETE_USER_TOUCH_FILE="/Library/Application Support/JAMF/Receipts/.userCleanup"
 # Credit: Steve Wood
 
 # Location of the user deadpool list after running script (confirmation file 
@@ -59,7 +59,7 @@ CONFIRM_USER_TOUCH_FILE="/private/tmp/.userDeleted"
 JAMF_BINARY="/usr/local/bin/jamf"
 
 # Convert the space separated list of users into an array for looping through
-listOfUsers=$(cat $DELETE_USER_TOUCH_FILE)
+listOfUsers=$(cat "$DELETE_USER_TOUCH_FILE")
 arrayOfUsers=($listOfUsers)
 
 # For every user in the list, delete the user account with the Jamf binary
@@ -72,12 +72,12 @@ for user in ${arrayOfUsers[@]}; do
 	############################################################################
 	# It's not that I don't trust you.  I don't trust anyone.
 	
-	#echo "$JAMF_BINARY deleteAccount -username $user -deleteHomeDirectory"
-	$JAMF_BINARY deleteAccount -username $user -deleteHomeDirectory
+	echo "$JAMF_BINARY deleteAccount -username $user -deleteHomeDirectory"
+	#$JAMF_BINARY deleteAccount -username "$user" -deleteHomeDirectory
 done
 
 # Move the delete file for auditing purposes
-/bin/mv $DELETE_USER_TOUCH_FILE $CONFIRM_USER_TOUCH_FILE
+#/bin/mv "$DELETE_USER_TOUCH_FILE" "$CONFIRM_USER_TOUCH_FILE"
 
 # Run a recon to clear out the extension attribute / smart computer group for 
 # running this process.

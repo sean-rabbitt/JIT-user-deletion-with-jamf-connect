@@ -46,7 +46,7 @@
 # Location of user deadpool list
 DELETE_USER_TOUCH_FILE="/Library/Application\ Support/JAMF/Receipts/.userCleanup"
 
-if [ -f $DELETE_USER_TOUCH_FILE ]; then
+if [ -f "$DELETE_USER_TOUCH_FILE" ]; then
 	echo "<result>TRUE</result>"
 else
 	echo "<result>FALSE</result>"
