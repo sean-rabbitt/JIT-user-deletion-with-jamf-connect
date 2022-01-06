@@ -25,7 +25,7 @@
 # check-in, and a policy that reads that file and runs a jamf deleteAccount 
 # command to kill that account.
 #
-# — SRABBITT 21DEC2021
+# — SRABBITT 05JAN2022
 
 # MIT License
 #
@@ -59,7 +59,7 @@ DELETE_USER_TOUCH_FILE="/Library/Application Support/JAMF/Receipts/.userCleanup"
 # Location of the Jamf binary
 JAMF_BINARY="/usr/local/bin/jamf"
 
-# Declare list of unmigrated users variable
+# Declare list of users variable
 listOfUsers=""
 
 # Warn users of what is going to happen
@@ -84,10 +84,10 @@ userAge=$((userAge * 60))
 
 # For all users who have a password on this machine (eliminates service accounts
 # but includes the _mbsetupuser and Jamf management accounts...)
-for user in $(dscl . list /Users Password | awk '$2 != "*" {print $1}'); do
+for user in $(/usr/bin/dscl . list /Users Password | /usr/bin/awk '$2 != "*" {print $1}'); do
 	# If a user has the attribute "OIDCProvider" in their user record, they are 
 	# a Jamf Connect user.
-	MIGRATESTATUS=($(dscl . -read /Users/$user | grep "OIDCProvider: " | awk {'print $2'}))
+	MIGRATESTATUS=($(/usr/bin/dscl . -read /Users/$user | grep "OIDCProvider: " | /usr/bin/awk {'print $2'}))
 	# If we didn't get a result, the variable is empty.  Thus that user is not 
 	# a Jamf Connect Login user.
 	if [[ -z $MIGRATESTATUS ]]; 
@@ -96,7 +96,7 @@ for user in $(dscl . list /Users Password | awk '$2 != "*" {print $1}'); do
 			echo "$user is Not a Jamf Connect User"
 		else
 			#Thank you, Allen Golbig.
-			create_time=$(dscl . -readpl /Users/$user accountPolicyData creationTime | awk '{ print $NF }')
+			create_time=$(/usr/bin/dscl . -readpl /Users/$user accountPolicyData creationTime | /usr/bin/awk '{ print $NF }')
 			
 			# Strip the annoying float and make it an int
 			create_time=$( printf "%.0f" $create_time )
